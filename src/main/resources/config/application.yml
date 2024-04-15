@@ -1,0 +1,17 @@
+server:
+  port: 8081
+spring:
+  autoconfigure.exclude:
+    - org.springframework.boot.autoconfigure.integration.IntegrationAutoConfiguration
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/videohosting
+    username: postgres
+    password: postgres
+    driverClassName: org.postgresql.Driver
+  flyway:
+    enabled: true
