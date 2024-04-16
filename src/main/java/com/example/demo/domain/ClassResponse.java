@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -29,4 +30,6 @@ public class ClassResponse {
 
     @Schema(name = "автор курса")
     private UserResponse user;
+
+    private List<VideoResponse> videos;
 }

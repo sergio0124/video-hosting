@@ -1,17 +1,21 @@
 insert into usr (id, fullname, non_locked, password, registration_date, role, status, username)
 values ('33f41160-35d0-4aa5-b706-12822adde9d3', 'Барсук С. А.', True,
-        '$2a$10$15v1TuouCdzj21XA.nsvUurMDjZQ6i3snLnvSX2elXFR2UH5fCuDe', CURRENT_TIMESTAMP, 'STUDENT', 'status', '111');
+        '$2a$10$15v1TuouCdzj21XA.nsvUurMDjZQ6i3snLnvSX2elXFR2UH5fCuDe',
+        CURRENT_TIMESTAMP, 'STUDENT', 'status', '111');
 
 insert into usr (id, fullname, non_locked, password, registration_date, role, status, username)
 values ('914446a8-1246-4389-80d3-76e92941374e', 'Енот С. А.', True,
-        '$2a$10$15v1TuouCdzj21XA.nsvUurMDjZQ6i3snLnvSX2elXFR2UH5fCuDe', CURRENT_TIMESTAMP, 'TEACHER', 'status', '222');
+        '$2a$10$15v1TuouCdzj21XA.nsvUurMDjZQ6i3snLnvSX2elXFR2UH5fCuDe',
+        CURRENT_TIMESTAMP, 'TEACHER', 'status', '222');
 insert into usr (id, fullname, non_locked, password, registration_date, role, status, username)
 values ('d4eaea72-58cd-492c-bd0d-b11dbc4a73b7', 'Конь С. А.', True,
-        '$2a$10$15v1TuouCdzj21XA.nsvUurMDjZQ6i3snLnvSX2elXFR2UH5fCuDe', CURRENT_TIMESTAMP, 'TEACHER', 'status', '333');
+        '$2a$10$15v1TuouCdzj21XA.nsvUurMDjZQ6i3snLnvSX2elXFR2UH5fCuDe',
+        CURRENT_TIMESTAMP, 'TEACHER', 'status', '333');
 
 insert into usr (id, fullname, non_locked, password, registration_date, role, status, username)
 values ('37b39513-0a4a-4dae-837d-a7b4b94dc05b', 'Пчела С. А.', True,
-        '$2a$10$15v1TuouCdzj21XA.nsvUurMDjZQ6i3snLnvSX2elXFR2UH5fCuDe', CURRENT_TIMESTAMP, 'ADMIN', 'status', '333');
+        '$2a$10$15v1TuouCdzj21XA.nsvUurMDjZQ6i3snLnvSX2elXFR2UH5fCuDe',
+        CURRENT_TIMESTAMP, 'ADMIN', 'status', '444');
 
 
 insert into vclass (id, creation_date, description, name, user_id)
@@ -51,7 +55,7 @@ values ('2ad4b452-88cc-4356-ba48-868ac12b7728', TRUE, '4f4ff511-834f-4fb0-a413-c
         '33f41160-35d0-4aa5-b706-12822adde9d3');
 
 insert into subscribe (id, is_accepted, class_id, user_id)
-values ('2ad4b452-88cc-4356-ba48-868ac12b7728', FALSE, '35490713-6fe2-45a6-8681-bf3e241b5a51',
+values ('7188e072-e3fc-40d7-8537-d67ac4e3fe87', FALSE, '35490713-6fe2-45a6-8681-bf3e241b5a51',
         '33f41160-35d0-4aa5-b706-12822adde9d3');
 
 

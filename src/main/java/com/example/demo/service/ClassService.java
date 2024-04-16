@@ -25,7 +25,7 @@ public class ClassService {
 
     private final ClassManager manager;
 
-    private final DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+    private final DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 
     public ClassListResponse searchClasses(String className, String teacherName, Integer page, Integer limit) {
         List<ClassEntity> classEntities;
@@ -65,6 +65,25 @@ public class ClassService {
                                         .build())
                                 .build())
                         .toList())
+                .build();
+    }
+
+    public ClassResponse getClassById(UUID classId) {
+        ClassEntity c = manager.getClassById(classId);
+        return ClassResponse
+                .builder()
+                .id(c.getId())
+                .creationDate(df.format(c.getCreationDate()))
+                .description(c.getDescription())
+                .name(c.getName())
+                .user(UserResponse
+                        .builder()
+                        .id(c.getUser().getId())
+                        .username(c.getUser().getUsername())
+                        .role(c.getUser().getRole())
+                        .status(c.getUser().getStatus())
+                        .fullname(c.getUser().getFullname())
+                        .build())
                 .build();
     }
 }

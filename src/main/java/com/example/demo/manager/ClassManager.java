@@ -57,4 +57,8 @@ public class ClassManager {
                 pageable.getPageSize());
         return result;
     }
+
+    public ClassEntity getClassById(UUID classId) {
+        return repository.findById(classId).orElseThrow();
+    }
 }

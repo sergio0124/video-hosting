@@ -36,7 +36,7 @@ public interface UserController {
     @Operation(summary = "Получение пользователя")
     @GetMapping(value = "api/v1/admin/users/{searchString}")
     List<UserResponse> getUsers(@PathVariable String searchString,
-                                @RequestParam(defaultValue = "1") @Min(0) Integer page,
+                                @RequestParam(defaultValue = "0") @Min(0) Integer page,
                                 @RequestParam(defaultValue = "10") @Min(10) Integer limit);
 
     @Operation(summary = "Удаление пользователя")

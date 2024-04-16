@@ -56,8 +56,7 @@ create table visit
     video_id      uuid      not null,
     primary key (id)
 );
-alter table if exists usr add constraint UK_ei2wd7l4vi30oxdyv5db7g3pk unique (fullname);
-alter table if exists usr add constraint UK_b8lc6ip8h37k6uq4w54j3uj9n unique (role);
+
 alter table if exists usr add constraint UK_dfui7gxngrgwn9ewee3ogtgym unique (username);
 alter table if exists vclass add constraint FKfd21drdiq9ml70eycrf5y3q19 foreign key (user_id) references usr;
 alter table if exists comment add constraint FKgcgdcgly6u49hf4g8y2di3g4p foreign key (user_id) references usr;

@@ -50,6 +50,6 @@ public class CommentManager {
     }
 
     public List<CommentEntity> getComments(CommentGetRequest request) {
-        return repository.findCommentEntitiesByVideoId(request.getVideoId());
+        return repository.findCommentEntitiesByVideoId(UUID.fromString(request.getVideoId()));
     }
 }

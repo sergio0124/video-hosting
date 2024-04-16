@@ -14,5 +14,5 @@ public class CommentGetRequest {
     @Schema(name = "id видеозаписи",
             required = true,
             example = "04fc55ae-e19c-4ccc-a89d-dee24ccc3d6d")
-    private UUID videoId;
+    private String videoId;
 }

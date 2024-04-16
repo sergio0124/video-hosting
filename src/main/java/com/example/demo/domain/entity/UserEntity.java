@@ -37,14 +37,14 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String fullname;
 
     @Column(nullable = false)
     @CreatedDate
     private Timestamp registrationDate;
 
-    @Column(name = "role", nullable = false, unique = true)
+    @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
