@@ -1,6 +1,16 @@
 package com.example.demo.domain.entity;
 
 import com.example.demo.domain.entity.enums.Role;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +23,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -34,6 +43,11 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false, unique = true)
     private String username;
 
+    private String imageUrl;
+    
+    @Column(unique = true)
+    private String mail;
+
     @Column(nullable = false)
     private String password;
 
@@ -44,21 +58,22 @@ public class UserEntity implements UserDetails {
     @CreatedDate
     private Timestamp registrationDate;
 
-    @Column(name = "role", nullable = false)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(name = "non_locked")
     private boolean nonLocked = true;
+
+    private boolean isActive = true;
 
     @Column(name = "status")
     private String status;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<ClassEntity> classes;
+    private List<PlaylistEntity> classes;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<SubscribeEntity> subscribes;
+    private List<PermissionEntity> subscribes;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<VideoEntity> videos;
@@ -68,6 +83,9 @@ public class UserEntity implements UserDetails {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<CommentEntity> comments;
+
+    @OneToMany(mappedBy="user", fetch = FetchType.LAZY)
+    private List<GroupEntity> groups;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

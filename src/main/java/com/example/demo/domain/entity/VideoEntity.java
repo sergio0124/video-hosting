@@ -54,7 +54,7 @@ public class VideoEntity {
 
     @ManyToOne
     @JoinColumn(name = "class_id", referencedColumnName = "id", nullable = false)
-    private ClassEntity vclass;
+    private PlaylistEntity vclass;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)

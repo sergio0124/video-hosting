@@ -1,101 +1,72 @@
 package com.example.demo.service;
 
-import com.example.demo.domain.UserRegisterRequest;
+import com.example.demo.domain.UserCreateRequest;
 import com.example.demo.domain.UserResponse;
 import com.example.demo.domain.UserUpdateRequest;
 import com.example.demo.domain.entity.UserEntity;
-import com.example.demo.domain.entity.enums.Role;
-import com.example.demo.manager.UserManager;
+import com.example.demo.mapper.UserMapper;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.util.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import javax.management.openmbean.KeyAlreadyExistsException;
+import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
-public class UserService implements UserDetailsService {
+public class UserService {
 
-    private final PasswordEncoder bCryptPasswordEncoder;
-    private final UserManager manager;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        var user = manager.findUserByUsername(s);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-        return user;
+    private final String IMAGES_URL = "user-photos/";
+
+    public void blockUser(UUID userId) {
+	var user = userRepository.findById(userId).orElseThrow();
+	user.setNonLocked(!user.isAccountNonLocked());
+	userRepository.save(user);
     }
 
-    public void createUser(UserRegisterRequest request) {
-        UserEntity user = UserEntity
-                .builder()
-                .status(request.getStatus())
-                .password(bCryptPasswordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
-                .fullname(request.getFullname())
-                .username(request.getUsername())
-                .build();
+    public List<UserResponse> getUsers(String search) {
+	if (StringUtils.isBlank(search)) {
+	    search = "";
+	}
 
-        if (manager.findUserByUsername(request.getUsername()) != null) {
-            log.warn("user with login '{}' is already exists", request.getUsername());
-            throw new KeyAlreadyExistsException("Пользователь с логином " + request.getUsername() + " уже существует");
-        }
+	var users = userRepository.findUserEntitiesByUsernameContainsIgnoreCaseOrFullnameContainsIgnoreCase(search,
+		search);
 
-        manager.saveUser(user);
+	return users.stream().map(userMapper::doMap).collect(Collectors.toList());
     }
 
-    public List<UserResponse> searchUsers(String searchString, Integer page, Integer limit) {
-        return manager.searchUsers(searchString, PageRequest.of(
-                page,
-                limit,
-                Sort.by("username").descending())).stream()
-                .map(c -> UserResponse
-                        .builder()
-                        .username(c.getUsername())
-                        .role(c.getRole())
-                        .status(c.getStatus())
-                        .fullname(c.getFullname())
-                        .build()).toList();
+    public void createUser(UserCreateRequest request) throws IOException {
+	UserEntity userEntity = userMapper.toEntityFronCreateRequest(request);
+	userEntity.setId(UUID.randomUUID());
+
+	var multipartFile = request.getImage();
+	String fileName = userEntity.getId() + "." + multipartFile.getOriginalFilename().split("\\.")[1];
+	FileUploadUtil.saveFile(IMAGES_URL, fileName, multipartFile);
+
+	userEntity.setImageUrl(IMAGES_URL + fileName);
+	userRepository.save(userEntity);
     }
 
-    public void deleteUser(String username) {
-        if (manager.findUserByUsername(username) == null) {
-            log.warn("user with username '{}' do not exist", username);
-            throw new UsernameNotFoundException("Пользователь с логином " + username + " не существует");
-        }
-        manager.deleteUser(username);
-    }
+    public void updateUser(UserUpdateRequest request) throws IOException {
+	var userEntity = userRepository.findById(request.getId()).orElseThrow();
+	if (request.getImage() != null) {
+	    var multipartFile = request.getImage();
+	    String fileName = userEntity.getId() + "." + multipartFile.getOriginalFilename().split("\\.")[1];
+	    FileUploadUtil.saveFile(IMAGES_URL, fileName, multipartFile);
+	}
 
-    public void updateUser(UserEntity user, UserUpdateRequest request) {
-        if (!Objects.equals(user.getUsername(), request.getUsername()) && user.getRole() != Role.ADMIN){
-            return;
-        }
-        request.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
-        manager.updateUser(request);
-    }
-
-    public UserResponse getUserInformation(String username) {
-        var user = manager.findUserByUsername(username);
-        return UserResponse.builder()
-                .id(user.getId())
-                .fullname(user.getFullname())
-                .status(user.getStatus())
-                .role(user.getRole())
-                .username(user.getUsername())
-                .build();
+	userEntity.setFullname(request.getFullname());
+	userEntity.setMail(request.getMail());
+	userEntity.setStatus(request.getStatus());
+	userEntity.setUsername(request.getUsername());
+	userEntity.setRole(request.getRole());
+	userRepository.save(userEntity);
     }
 }
