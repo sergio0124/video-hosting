@@ -1,6 +1,7 @@
 package com.example.demo.domain.entity;
 
 import com.example.demo.domain.entity.enums.Role;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,26 +10,31 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @Data
-@ToString(exclude = {"playlists", "permissions", "comments", "visits", "groups"})
-@EqualsAndHashCode(exclude = {"playlists", "permissions", "comments", "visits", "groups"})
+@ToString(exclude = { "playlists", "permissions", "comments", "visits", "groups", "groupUsers" })
+@EqualsAndHashCode(exclude = { "playlists", "permissions", "comments", "visits", "groups", "groupUsers" })
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -44,7 +50,7 @@ public class UserEntity implements UserDetails {
     private String username;
 
     private String imageUrl;
-    
+
     @Column(unique = true)
     private String mail;
 
@@ -80,42 +86,47 @@ public class UserEntity implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<CommentEntity> comments;
 
-    @OneToMany(mappedBy="user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<GroupEntity> groups;
+
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(name = "group_user", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
+	    @JoinColumn(name = "group_id") })
+    Set<GroupEntity> groupUsers = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Set.of(role);
+	return Set.of(role);
     }
 
     @Override
     public String getPassword() {
-        return password;
+	return password;
     }
 
     @Override
     public String getUsername() {
-        return username;
+	return username;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+	return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return nonLocked;
+	return nonLocked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+	return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return isActive;
+	return isActive;
     }
 }
 

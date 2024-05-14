@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -17,6 +18,7 @@ import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,4 +49,7 @@ public class GroupEntity {
 
     @OneToMany(mappedBy = "group")
     private List<PermissionEntity> permissions;
+
+    @ManyToMany(mappedBy = "groupUsers")
+    private List<UserEntity> users = new ArrayList<>();
 }

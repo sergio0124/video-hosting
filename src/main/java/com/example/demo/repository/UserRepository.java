@@ -16,4 +16,6 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
 
     List<UserEntity> findUserEntitiesByUsernameContainsIgnoreCaseOrFullnameContainsIgnoreCase(String username,
             String fullname);
+
+    List<UserEntity> findUserEntitiesByGroupsId(UUID id);
 }
