@@ -52,6 +52,6 @@ public class PlaylistEntity {
     @OneToMany(mappedBy = "playlist", fetch = FetchType.LAZY)
     private List<PermissionEntity> permissions;
 
-    @OneToMany(mappedBy = "playlist", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "playlist", fetch = FetchType.EAGER)
     private List<VideoEntity> videos;
 }
