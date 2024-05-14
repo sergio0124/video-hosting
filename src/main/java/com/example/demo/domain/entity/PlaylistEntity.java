@@ -49,7 +49,7 @@ public class PlaylistEntity {
     @ManyToOne
     private UserEntity user;
 
-    @OneToMany(mappedBy = "playlist", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "playlist", fetch = FetchType.EAGER)
     private List<PermissionEntity> permissions;
 
     @OneToMany(mappedBy = "playlist", fetch = FetchType.EAGER)

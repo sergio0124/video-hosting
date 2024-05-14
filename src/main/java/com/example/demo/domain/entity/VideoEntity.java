@@ -52,12 +52,12 @@ public class VideoEntity {
     @ManyToOne
     private PlaylistEntity playlist;
 
-    @OneToMany(mappedBy = "video", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "video", fetch = FetchType.EAGER)
     private List<TimeCodeEntity> timeCodes;
 
-    @OneToMany(mappedBy = "video", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "video", fetch = FetchType.EAGER)
     private List<VisitEntity> visits;
 
-    @OneToMany(mappedBy = "video", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "video", fetch = FetchType.EAGER)
     private List<CommentEntity> comments;
 }
