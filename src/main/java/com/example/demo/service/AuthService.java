@@ -37,7 +37,7 @@ public class AuthService {
             throw new RuntimeException("Пользователь с таким именем уже существует");
         }
 
-        if (repository.existsByEmail(user.getMail())) {
+        if (repository.existsByMail(user.getMail())) {
             throw new RuntimeException("Пользователь с таким email уже существует");
         }
 

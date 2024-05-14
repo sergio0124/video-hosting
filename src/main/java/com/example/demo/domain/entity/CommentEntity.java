@@ -1,5 +1,14 @@
 package com.example.demo.domain.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,20 +17,13 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 
 @Data
-@ToString(exclude = {"video", "user"})
-@EqualsAndHashCode(exclude = {"video", "user"})
+@ToString(exclude = {"video", "user", "comment", "comments"})
+@EqualsAndHashCode(exclude = {"video", "user", "comment", "comments"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,18 +35,20 @@ public class CommentEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(name = "creation_date", nullable = false)
     @CreatedDate
     private Timestamp creationDate;
 
-    @Column(name = "text", nullable = false)
     private String text;
 
     @ManyToOne
-    @JoinColumn(name = "video_id", referencedColumnName = "id", nullable = false)
     private VideoEntity video;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private UserEntity user;
+
+    @ManyToOne
+    private CommentEntity comment;
+
+    @OneToMany(mappedBy = "comment")
+    private List<CommentEntity> comments;
 }

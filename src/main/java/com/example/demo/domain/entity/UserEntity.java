@@ -27,8 +27,8 @@ import java.sql.Timestamp;
 import java.util.*;
 
 @Data
-@ToString(exclude = {"classes", "subscribes", "videos", "visits"})
-@EqualsAndHashCode(exclude = {"classes", "subscribes", "videos", "visits"})
+@ToString(exclude = {"playlists", "permissions", "comments", "visits", "groups"})
+@EqualsAndHashCode(exclude = {"playlists", "permissions", "comments", "visits", "groups"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -66,17 +66,13 @@ public class UserEntity implements UserDetails {
 
     private boolean isActive = true;
 
-    @Column(name = "status")
     private String status;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<PlaylistEntity> classes;
+    private List<PlaylistEntity> playlists;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<PermissionEntity> subscribes;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<VideoEntity> videos;
+    private List<PermissionEntity> permissions;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<VisitEntity> visits;
@@ -119,7 +115,7 @@ public class UserEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isActive;
     }
 }
 

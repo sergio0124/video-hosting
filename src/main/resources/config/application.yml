@@ -7,13 +7,13 @@ spring:
     database: POSTGRESQL
     show-sql: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
   datasource:
     url: jdbc:postgresql://127.0.0.1:5432/videohosting
     username: postgres
     password: postgres
     driverClassName: org.postgresql.Driver
   flyway:
-    enabled: true
+    enabled: false
 
 token.signing.key: 53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855

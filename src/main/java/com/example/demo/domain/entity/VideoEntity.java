@@ -1,5 +1,15 @@
 package com.example.demo.domain.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,16 +18,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
@@ -36,29 +36,24 @@ public class VideoEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(name = "name", nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "description")
+    private String imageUrl;
+
     private String description;
 
-    @Column(name = "video_name", nullable = false)
-    private String videoName;
-
-    @Column(name = "folder", nullable = false)
-    private String folder;
+    @Column(nullable = false)
+    private String videoUrl;
 
     @CreationTimestamp
-    @Column(name = "creation_time", nullable = false)
     private Timestamp creationTime;
 
     @ManyToOne
-    @JoinColumn(name = "class_id", referencedColumnName = "id", nullable = false)
-    private PlaylistEntity vclass;
+    private PlaylistEntity playlist;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    private UserEntity user;
+    @OneToMany(mappedBy = "video", fetch = FetchType.LAZY)
+    private List<TimeCodeEntity> timeCodes;
 
     @OneToMany(mappedBy = "video", fetch = FetchType.LAZY)
     private List<VisitEntity> visits;
