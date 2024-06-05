@@ -7,6 +7,7 @@ import com.example.demo.domain.entity.UserEntity;
 import com.example.demo.repository.PlaylistRepository;
 import com.example.demo.service.PlaylistService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,5 +51,46 @@ public class PlaylistController {
     @GetMapping("/app/playlist")
     public PlaylistResponse getPlaylist(@RequestParam UUID id) {
 	return playlistService.getPlaylist(id);
+    }
+
+
+    @GetMapping("/ex")
+    public ResponseEntity<?> test1() {
+	return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/ex")
+    public ResponseEntity<?> test2() {
+	return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/ex")
+    public ResponseEntity<?> test3() {
+	return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/ex")
+    public ResponseEntity<?> test4() {
+	return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/v1/auth")
+    public ResponseEntity<?> test5() {
+	return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/v1/register")
+    public ResponseEntity<?> test6() {
+	return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/v1/users/{id}")
+    public ResponseEntity<?> test7() {
+	return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/v1/users/{id}")
+    public ResponseEntity<?> test8() {
+	return ResponseEntity.ok().build();
     }
 }

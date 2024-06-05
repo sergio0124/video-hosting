@@ -97,4 +97,19 @@ public class GroupService {
 	);
 	return result;
     }
+
+    public List<GroupResponse> getCreatedGroups(String search, UUID userId) {
+	if (StringUtils.isBlank(search)) {
+	    search = "";
+	}
+	List<GroupEntity> groups = groupRepository.findGroupEntitiesByUserIdAndNameContainsIgnoreCase(userId, search);
+
+	return groups.stream().map(c -> GroupResponse.builder()
+		.creationDate(c.getCreationDate())
+		.description(c.getDescription())
+		.count(c.getUsers().size())
+		.id(c.getId())
+		.name(c.getName())
+		.build()).collect(Collectors.toList());
+    }
 }

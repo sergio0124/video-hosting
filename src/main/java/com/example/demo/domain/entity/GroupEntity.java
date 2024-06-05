@@ -1,5 +1,6 @@
 package com.example.demo.domain.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -47,9 +48,9 @@ public class GroupEntity {
     @ManyToOne
     private UserEntity user;
 
-    @OneToMany(mappedBy = "group")
+    @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<PermissionEntity> permissions;
 
-    @ManyToMany(mappedBy = "groupUsers")
+    @ManyToMany(mappedBy = "groupUsers", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private List<UserEntity> users = new ArrayList<>();
 }

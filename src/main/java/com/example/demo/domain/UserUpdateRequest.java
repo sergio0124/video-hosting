@@ -28,4 +28,6 @@ public class UserUpdateRequest {
     private Role role;
 
     private String status;
+
+    private String password;
 }

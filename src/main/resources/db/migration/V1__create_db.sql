@@ -7,7 +7,7 @@ create table comment
     video_id      uuid,
     text          varchar(255),
     primary key (id)
-)
+);
 create table group_table
 (
     creation_date timestamp(6) not null,
@@ -16,7 +16,13 @@ create table group_table
     description   varchar(255),
     name          varchar(255),
     primary key (id)
-)
+);
+create table group_user
+(
+    group_id uuid not null,
+    user_id  uuid not null,
+    primary key (group_id, user_id)
+);
 create table permission
 (
     is_accepted      boolean,
@@ -29,7 +35,7 @@ create table permission
     user_id          uuid,
     description      varchar(255),
     primary key (id)
-)
+);
 create table playlist
 (
     is_public     boolean,
@@ -39,7 +45,7 @@ create table playlist
     description   varchar(255),
     name          varchar(255) not null,
     primary key (id)
-)
+);
 create table time_code
 (
     id          uuid not null,
@@ -47,7 +53,7 @@ create table time_code
     description varchar(255),
     time        varchar(255),
     primary key (id)
-)
+);
 create table usr
 (
     is_active         boolean      not null,
@@ -62,7 +68,7 @@ create table usr
     status            varchar(255),
     username          varchar(255) not null unique,
     primary key (id)
-)
+);
 create table video
 (
     creation_time timestamp(6),
@@ -73,7 +79,7 @@ create table video
     name          varchar(255) not null,
     video_url     varchar(255) not null,
     primary key (id)
-)
+);
 create table visit
 (
     creation_date timestamp(6),
@@ -81,16 +87,18 @@ create table visit
     user_id       uuid,
     video_id      uuid,
     primary key (id)
-)
-alter table if exists comment add constraint FKmk3c8pbvysjndxywunibl2voc foreign key (comment_id) references comment
-alter table if exists comment add constraint FKgcgdcgly6u49hf4g8y2di3g4p foreign key (user_id) references usr
-alter table if exists comment add constraint FKbsuh08kv1lyh8v6ivufrollr6 foreign key (video_id) references video
-alter table if exists group_table add constraint FKre2gdpvcl8fc3tv1y6mpcq6mp foreign key (user_id) references usr
-alter table if exists permission add constraint FKo27iwfa9cfgdp31l9g18qppfy foreign key (group_id) references group_table
-alter table if exists permission add constraint FKqbbox1mtnjugi853k6rpjo62t foreign key (playlist_id) references playlist
-alter table if exists permission add constraint FK736umsr6qhnro8id5r6bhcbrg foreign key (user_id) references usr
-alter table if exists playlist add constraint FK6ydwjfkd7amioiq3qkvtwvm7c foreign key (user_id) references usr
-alter table if exists time_code add constraint FKao1h678jcp595vm29jr0idpt9 foreign key (video_id) references video
-alter table if exists video add constraint FKnis2lq3eppvua68mvgk75e6rg foreign key (playlist_id) references playlist
-alter table if exists visit add constraint FK6759a7a4ms6qb2didahveukb foreign key (user_id) references usr
-alter table if exists visit add constraint FKlo2r2bmvab9rnlc4n1fdq485d foreign key (video_id) references video
+);
+alter table if exists comment add constraint FKmk3c8pbvysjndxywunibl2voc foreign key (comment_id) references comment;
+alter table if exists comment add constraint FKgcgdcgly6u49hf4g8y2di3g4p foreign key (user_id) references usr;
+alter table if exists comment add constraint FKbsuh08kv1lyh8v6ivufrollr6 foreign key (video_id) references video;
+alter table if exists group_table add constraint FKre2gdpvcl8fc3tv1y6mpcq6mp foreign key (user_id) references usr;
+alter table if exists group_user add constraint FK34g68g2qiha6iexg8t8y01bxd foreign key (group_id) references group_table;
+alter table if exists group_user add constraint FKq1mx67whrxasdbk2dma57i7lb foreign key (user_id) references usr;
+alter table if exists permission add constraint FKo27iwfa9cfgdp31l9g18qppfy foreign key (group_id) references group_table;
+alter table if exists permission add constraint FKqbbox1mtnjugi853k6rpjo62t foreign key (playlist_id) references playlist;
+alter table if exists permission add constraint FK736umsr6qhnro8id5r6bhcbrg foreign key (user_id) references usr;
+alter table if exists playlist add constraint FK6ydwjfkd7amioiq3qkvtwvm7c foreign key (user_id) references usr;
+alter table if exists time_code add constraint FKao1h678jcp595vm29jr0idpt9 foreign key (video_id) references video;
+alter table if exists video add constraint FKnis2lq3eppvua68mvgk75e6rg foreign key (playlist_id) references playlist;
+alter table if exists visit add constraint FK6759a7a4ms6qb2didahveukb foreign key (user_id) references usr;
+alter table if exists visit add constraint FKlo2r2bmvab9rnlc4n1fdq485d foreign key (video_id) references video;

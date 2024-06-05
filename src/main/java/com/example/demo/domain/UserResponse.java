@@ -15,6 +15,8 @@ public class UserResponse {
 
     private String imageUrl;
 
+    private String status;
+
     private String mail;
 
     private String password;
@@ -24,4 +26,6 @@ public class UserResponse {
     private Timestamp registrationDate;
 
     private Role role;
+
+    private boolean blocked;
 }

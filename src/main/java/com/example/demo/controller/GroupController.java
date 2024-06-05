@@ -44,6 +44,12 @@ public class GroupController {
 	return groupService.getGroups(search);
     }
 
+    @GetMapping("/app/created_groups")
+    public List<GroupResponse> getCreatedGroups(@RequestParam(required = false) String search,
+	    @AuthenticationPrincipal UserEntity user) {
+	return groupService.getCreatedGroups(search, user.getId());
+    }
+
     @GetMapping("/app/user/groups")
     public List<GroupResponse> getGroupsByUser(@RequestParam(required = false) String search, @AuthenticationPrincipal UserEntity user) {
 	return groupService.getGroupsByUser(search, user.getId());

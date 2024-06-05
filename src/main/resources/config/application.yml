@@ -1,19 +1,29 @@
 server:
   port: 8081
 spring:
+  mail:
+    host: smtp.gmail.com
+    username: reznikovsergeyfirst@gmail.com
+    password: uzyigrxtjgmrners
+    port: 587
+    protocol: smtp
+
   autoconfigure.exclude:
     - org.springframework.boot.autoconfigure.integration.IntegrationAutoConfiguration
+
   jpa:
     database: POSTGRESQL
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
+
   datasource:
     url: jdbc:postgresql://127.0.0.1:5432/videohosting
     username: postgres
     password: postgres
     driverClassName: org.postgresql.Driver
+
   flyway:
-    enabled: false
+    enabled: true
 
 token.signing.key: 53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855
