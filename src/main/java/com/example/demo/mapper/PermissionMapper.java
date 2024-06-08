@@ -12,6 +12,7 @@ public interface PermissionMapper {
 
     static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+    @Mapping(target = "playlistName", expression = "java(permissionEntity.getPlaylist().getName())")
     @Mapping(target = "inspireDate", expression = "java(permissionEntity.getIsTemporary() ? null : dateFormatter.format(permissionEntity.getInspirationDate().toLocalDateTime()))")
     @Mapping(target = "creationDate", expression = "java(dateFormatter.format(permissionEntity.getCreationDate().toLocalDateTime()))")
     @Mapping(target = "username", expression = "java(permissionEntity.getUser() == null ? null : permissionEntity.getUser().getUsername())")

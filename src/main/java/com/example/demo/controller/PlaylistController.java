@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,49 +49,14 @@ public class PlaylistController {
 	return playlistService.getPlaylists(search, isPublic);
     }
 
-    @GetMapping("/app/playlist")
-    public PlaylistResponse getPlaylist(@RequestParam UUID id) {
+    @GetMapping("/app/playlists/{id}")
+    public PlaylistResponse getPlaylist(@PathVariable UUID id) {
 	return playlistService.getPlaylist(id);
     }
 
-
-    @GetMapping("/ex")
-    public ResponseEntity<?> test1() {
-	return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/ex")
-    public ResponseEntity<?> test2() {
-	return ResponseEntity.ok().build();
-    }
-
-    @PutMapping("/ex")
-    public ResponseEntity<?> test3() {
-	return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/ex")
-    public ResponseEntity<?> test4() {
-	return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/v1/auth")
-    public ResponseEntity<?> test5() {
-	return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/v1/register")
-    public ResponseEntity<?> test6() {
-	return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/v1/users/{id}")
-    public ResponseEntity<?> test7() {
-	return ResponseEntity.ok().build();
-    }
-
-    @PutMapping("/v1/users/{id}")
-    public ResponseEntity<?> test8() {
-	return ResponseEntity.ok().build();
+    @GetMapping("/app/creator/playlists")
+    public List<PlaylistResponse> getPlaylistsByUser(@AuthenticationPrincipal UserEntity user,
+	    @RequestParam(name = "search", required = false) String search) {
+	return playlistService.getPlaylistsByCreator(user.getId(), search);
     }
 }

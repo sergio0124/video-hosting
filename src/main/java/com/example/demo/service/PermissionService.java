@@ -12,13 +12,13 @@ import com.example.demo.repository.PermissionRepository;
 import com.example.demo.repository.PlaylistRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -32,9 +32,21 @@ public class PermissionService {
     private final PlaylistRepository playlistRepository;
     private final PlaylistMapper playlistMapper;
 
-    public List<PermissionResponse> getPermissionsByCreatorId(UUID id) {
-	return permissionRepository.findPermissionEntitiesByPlaylistUserId(id).stream().map(permissionMapper::doMap)
-		.toList();
+    public List<PermissionResponse> getPermissionsByCreatorId(UUID id, UUID playlistId, String search) {
+	if (StringUtils.isBlank(search)) {
+	    search = "";
+	}
+	final String finalSearch = search;
+	if (Objects.isNull(playlistId)) {
+	    return permissionRepository.findPermissionEntitiesByPlaylistUserId(id).stream()
+		    .filter(c -> c.getUser().getUsername().contains(finalSearch) || c.getUser().getFullname()
+			    .contains(finalSearch) || c.getGroup().getName().contains(finalSearch))
+		    .map(permissionMapper::doMap).toList();
+	}
+	return permissionRepository.findPermissionEntitiesByPlaylistUserIdAndPlaylistId(id, playlistId).stream()
+		.filter(c -> c.getUser().getUsername().contains(finalSearch) || c.getUser().getFullname()
+			.contains(finalSearch) || c.getGroup().getName().contains(finalSearch))
+		.map(permissionMapper::doMap).toList();
     }
 
     public List<PermissionObjectResponse> getPermissionsObjects(String type, String search, UUID id) {

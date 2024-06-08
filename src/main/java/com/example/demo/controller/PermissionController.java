@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,8 +25,10 @@ public class PermissionController {
     private final PermissionService permissionService;
 
     @GetMapping("/app/creator/permissions")
-    public List<PermissionResponse> getPermissionsByCreator(@AuthenticationPrincipal UserEntity user) {
-	return permissionService.getPermissionsByCreatorId(user.getId());
+    public List<PermissionResponse> getPermissionsByCreator(@AuthenticationPrincipal UserEntity user,
+	    @RequestParam(name = "playlistId", required = false) UUID playlistId,
+	    @RequestParam(name ="search", required = false) String search) {
+	return permissionService.getPermissionsByCreatorId(user.getId(), playlistId, search);
     }
 
     @GetMapping("/app/creator/permissions/objects")

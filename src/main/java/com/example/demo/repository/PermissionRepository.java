@@ -11,4 +11,6 @@ import java.util.UUID;
 public interface PermissionRepository extends JpaRepository<PermissionEntity, UUID> {
 
     List<PermissionEntity> findPermissionEntitiesByPlaylistUserId(UUID playlist_user_id);
+
+    List<PermissionEntity> findPermissionEntitiesByPlaylistUserIdAndPlaylistId(UUID playlist_user_id, UUID playlist_id);
 }

@@ -26,4 +26,7 @@ public class PermissionResponse {
     private String description;
 
     private Boolean isTemporary;
+
+    @JsonProperty("playlist_name")
+    private String playlistName;
 }
