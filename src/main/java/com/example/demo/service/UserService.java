@@ -7,13 +7,14 @@ import com.example.demo.domain.UserUpdateRequest;
 import com.example.demo.domain.entity.UserEntity;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.util.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -24,8 +25,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-
-    private final String IMAGES_URL = "user-photos/";
 
     private final PasswordEncoder passwordEncoder;
     private final MailSenderService mailSenderService;
@@ -47,16 +46,10 @@ public class UserService {
 	return users.stream().map(userMapper::doMap).toList();
     }
 
-    public UserResponse createUser(UserCreateRequest request) throws IOException {
+    public UserResponse createUser(UserCreateRequest request) {
 	UserEntity userEntity = userMapper.toEntityFronCreateRequest(request);
 	userEntity.setId(UUID.randomUUID());
-
-	if (Objects.nonNull(request.getImage())) {
-	    var multipartFile = request.getImage();
-	    String fileName = userEntity.getId() + "." + multipartFile.getOriginalFilename().split("\\.")[1];
-	    FileUploadUtil.saveFile(IMAGES_URL, fileName, multipartFile);
-	    userEntity.setImageUrl(IMAGES_URL + fileName);
-	}
+	userEntity.setRegistrationDate(new Timestamp(new Date().getTime()));
 
 	var password = String.valueOf(UUID.randomUUID());
 	userEntity.setPassword(passwordEncoder.encode(password));
@@ -66,13 +59,8 @@ public class UserService {
 	return userMapper.doMap(userRepository.save(userEntity));
     }
 
-    public UserResponse updateUser(UserUpdateRequest request) throws IOException {
+    public UserResponse updateUser(UserUpdateRequest request) {
 	var userEntity = userRepository.findById(request.getId()).orElseThrow();
-	if (request.getImage() != null) {
-	    var multipartFile = request.getImage();
-	    String fileName = userEntity.getId() + "." + multipartFile.getOriginalFilename().split("\\.")[1];
-	    FileUploadUtil.saveFile(IMAGES_URL, fileName, multipartFile);
-	}
 
 	userEntity.setFullname(request.getFullname());
 	userEntity.setMail(request.getMail());
@@ -86,7 +74,7 @@ public class UserService {
 	return userMapper.doMap(userRepository.save(userEntity));
     }
 
-    public void createUsers(UserCreateJsonRequest request) throws IOException {
+    public void createUsers(UserCreateJsonRequest request) {
 	for (UserCreateRequest userCreateRequest : request.getUsers()) {
 	    createUser(userCreateRequest);
 	}
@@ -94,5 +82,11 @@ public class UserService {
 
     public boolean isUsernameUnique(String username) {
 	return Objects.isNull(userRepository.findUserEntityByUsername(username).orElse(null));
+    }
+
+    public void updatePhoto(UUID id, String fileName) {
+	UserEntity user = userRepository.findById(id).orElseThrow();
+	user.setImageUrl(fileName);
+	userRepository.save(user);
     }
 }

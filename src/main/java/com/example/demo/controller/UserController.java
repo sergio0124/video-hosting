@@ -39,7 +39,7 @@ public class UserController {
 	return userService.getUsers(search);
     }
 
-    @PostMapping(value = "/app/user", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PostMapping(value = "/app/user")
     public UserResponse createUser(@RequestBody UserCreateRequest request) throws IOException {
 	if (!userService.isUsernameUnique(request.getUsername())) {
 	    throw new BadRequestException("Пользователь с таким логином уже существует");

@@ -3,10 +3,22 @@ server:
 spring:
   mail:
     host: smtp.gmail.com
-    username: reznikovsergeyfirst@gmail.com
-    password: uzyigrxtjgmrners
+    username: wengarelo0@gmail.com
+    password: ihly tpnf usho eyth
     port: 587
     protocol: smtp
+    test-connection: true
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
 
   autoconfigure.exclude:
     - org.springframework.boot.autoconfigure.integration.IntegrationAutoConfiguration

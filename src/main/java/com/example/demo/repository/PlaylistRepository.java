@@ -11,4 +11,7 @@ import java.util.UUID;
 public interface PlaylistRepository extends JpaRepository<PlaylistEntity, UUID> {
 
     List<PlaylistEntity> findPlaylistEntitiesByIsPublicAndNameContainsIgnoreCase(Boolean isPublic, String name);
+
+    List<PlaylistEntity> findPlaylistEntitiesByUserIdAndNameContainsIgnoreCaseAndIsPublic(UUID user_id, String name,
+            Boolean isPublic);
 }

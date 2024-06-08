@@ -19,8 +19,6 @@ public class UserUpdateRequest {
 
     private String username;
 
-    private MultipartFile image;
-
     private String mail;
 
     private String fullname;

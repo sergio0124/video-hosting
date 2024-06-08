@@ -4,7 +4,6 @@ import com.example.demo.domain.entity.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,8 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserCreateRequest {
 
     private String username;
-
-    private MultipartFile image;
 
     private String mail;
 
