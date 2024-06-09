@@ -18,4 +18,6 @@ public class TimeCodeRequest {
     private String time;
 
     private String description;
+
+    private UUID videoId;
 }

@@ -18,7 +18,9 @@ public class PlaylistResponse {
 
     private String name;
 
-    private Timestamp creationDate;
+    private String creationDate;
+
+    private Boolean isPublic;
 
     private String description;
 

@@ -17,7 +17,7 @@ public class CommentResponse {
 
     private UUID id;
 
-    private Timestamp creationDate;
+    private String creationDate;
 
     private String text;
 

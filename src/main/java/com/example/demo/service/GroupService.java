@@ -13,7 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -33,22 +35,21 @@ public class GroupService {
     public void createGroup(GroupCreateRequest request, UserEntity auth) {
 	GroupEntity groupEntity = groupMapper.toEntityFromCreateRequest(request);
 	groupEntity.setUsers(new ArrayList<>());
+	groupEntity.setCreationDate(new Timestamp(new Date().getTime()));
+	groupEntity.setUser(userRepository.findById(auth.getId()).orElseThrow());
 
-	request.getUsers().forEach(c -> groupEntity.getUsers().add(userRepository.findById(c.getId()).orElseThrow()));
-
-	var user = userRepository.findById(auth.getId()).orElseThrow();
-	user.getGroups().add(groupRepository.save(groupEntity));
-	userRepository.save(user);
+	request.getUsers().forEach(c -> groupEntity.getUsers().add(userRepository.findById(c).orElseThrow()));
+	groupRepository.save(groupEntity);
     }
 
     public void updateGroup(GroupUpdateRequest request) {
 	GroupEntity groupEntity = groupRepository.findById(request.getId()).orElseThrow();
 	groupEntity.setDescription(request.getDescription());
 	groupEntity.setName(request.getName());
-
 	groupEntity.setUsers(new ArrayList<>());
-	request.getUsers().forEach(c -> groupEntity.getUsers().add(userRepository.findById(c.getId()).orElseThrow()));
+	groupEntity.setCreationDate(new Timestamp(new Date().getTime()));
 
+	request.getUsers().forEach(c -> groupEntity.getUsers().add(userRepository.findById(c).orElseThrow()));
 	groupRepository.save(groupEntity);
     }
 
@@ -62,13 +63,10 @@ public class GroupService {
 	}
 	List<GroupEntity> groups = groupRepository.findGroupEntitiesByNameContainsIgnoreCase(search);
 
-	return groups.stream().map(c -> GroupResponse.builder()
-		.creationDate(c.getCreationDate())
-		.description(c.getDescription())
-		.count(c.getUsers().size())
-		.id(c.getId())
-		.name(c.getName())
-		.build()).collect(Collectors.toList());
+	return groups.stream()
+		.map(c -> GroupResponse.builder().creationDate(c.getCreationDate()).description(c.getDescription())
+			.count(c.getUsers().size()).id(c.getId()).name(c.getName()).build())
+		.toList();
     }
 
     public List<GroupResponse> getGroupsByUser(String search, UUID id) {
@@ -77,24 +75,17 @@ public class GroupService {
 	}
 	List<GroupEntity> groups = groupRepository.findGroupEntitiesByUsersIdAndNameContainsIgnoreCase(id, search);
 
-	return groups.stream().map(c -> GroupResponse.builder()
-		.creationDate(c.getCreationDate())
-		.description(c.getDescription())
-		.count(c.getUsers().size())
-		.id(c.getId())
-		.name(c.getName())
-		.build()).collect(Collectors.toList());
+	return groups.stream()
+		.map(c -> GroupResponse.builder().creationDate(c.getCreationDate()).description(c.getDescription())
+			.count(c.getUsers().size()).id(c.getId()).name(c.getName()).build())
+		.toList();
     }
 
     public GroupResponse getGroup(UUID id) {
 	var group = groupRepository.findById(id).orElseThrow();
 	var result = groupMapper.toResponse(group);
 
-	result.setUsers(
-		userRepository.findUserEntitiesByGroupsId(id)
-			.stream().map(userMapper::doMap)
-			.collect(Collectors.toList())
-	);
+	result.setUsers(group.getUsers().stream().map(userMapper::doMap).toList());
 	return result;
     }
 
@@ -104,12 +95,9 @@ public class GroupService {
 	}
 	List<GroupEntity> groups = groupRepository.findGroupEntitiesByUserIdAndNameContainsIgnoreCase(userId, search);
 
-	return groups.stream().map(c -> GroupResponse.builder()
-		.creationDate(c.getCreationDate())
-		.description(c.getDescription())
-		.count(c.getUsers().size())
-		.id(c.getId())
-		.name(c.getName())
-		.build()).collect(Collectors.toList());
+	return groups.stream()
+		.map(c -> GroupResponse.builder().creationDate(c.getCreationDate()).description(c.getDescription())
+			.count(c.getUsers().size()).id(c.getId()).name(c.getName()).build())
+		.collect(Collectors.toList());
     }
 }

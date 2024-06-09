@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -33,6 +35,7 @@ public class PlaylistService {
 
     public void createPlaylist(PlaylistCreateRequest request, UUID userId) {
 	var entity = playlistMapper.toEntity(request);
+	entity.setCreationDate(new Timestamp(new Date().getTime()));
 	entity.setUser(userRepository.findById(userId).orElseThrow());
 	playlistRepository.save(entity);
     }

@@ -20,15 +20,13 @@ public class VideoResponse {
 
     private String name;
 
-    @JsonProperty("image_url")
     private String imageUrl;
 
     private String description;
 
-    @JsonProperty("video_url")
     private String videoUrl;
 
-    private Date creationTime;
+    private String creationTime;
 
     private Integer count;
 

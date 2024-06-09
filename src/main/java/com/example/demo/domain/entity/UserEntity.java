@@ -89,9 +89,7 @@ public class UserEntity implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<GroupEntity> groups;
 
-    @ManyToMany(cascade = { CascadeType.ALL })
-    @JoinTable(name = "group_user", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
-	    @JoinColumn(name = "group_id") })
+    @ManyToMany(mappedBy = "users")
     Set<GroupEntity> groupUsers = new HashSet<>();
 
     @Override

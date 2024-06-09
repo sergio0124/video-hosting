@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.domain.ProfileUpdateRequest;
 import com.example.demo.domain.UserCreateJsonRequest;
 import com.example.demo.domain.UserCreateRequest;
 import com.example.demo.domain.UserResponse;
@@ -54,8 +55,7 @@ public class UserService {
 	var password = String.valueOf(UUID.randomUUID());
 	userEntity.setPassword(passwordEncoder.encode(password));
 	mailSenderService.send(userEntity.getMail(), "Создание аккаунта",
-		"Для логина через пользователя " + userEntity.getUsername()
-			+ " воспользуйтесь паролем " + password);
+		"Для логина через пользователя " + userEntity.getUsername() + " воспользуйтесь паролем " + password);
 	return userMapper.doMap(userRepository.save(userEntity));
     }
 
@@ -67,10 +67,6 @@ public class UserService {
 	userEntity.setStatus(request.getStatus());
 	userEntity.setUsername(request.getUsername());
 	userEntity.setRole(request.getRole());
-
-	if (StringUtils.isNotBlank(request.getPassword())){
-	    userEntity.setPassword(passwordEncoder.encode(request.getPassword()));
-	}
 	return userMapper.doMap(userRepository.save(userEntity));
     }
 
@@ -88,5 +84,20 @@ public class UserService {
 	UserEntity user = userRepository.findById(id).orElseThrow();
 	user.setImageUrl(fileName);
 	userRepository.save(user);
+    }
+
+    public void updateProfile(ProfileUpdateRequest request) {
+	UserEntity userEntity = userRepository.findById(request.getId()).orElseThrow();
+	userEntity.setFullname(request.getFullname());
+	userEntity.setMail(request.getMail());
+	userEntity.setStatus(request.getStatus());
+	userEntity.setUsername(request.getUsername());
+
+	if (StringUtils.isNotBlank(request.getNewPass()) && StringUtils.isNotBlank(
+		request.getOldPass()) && passwordEncoder.matches(request.getOldPass(), userEntity.getPassword())) {
+	    userEntity.setPassword(passwordEncoder.encode(request.getNewPass()));
+	}
+
+	userRepository.save(userEntity);
     }
 }

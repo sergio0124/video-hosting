@@ -12,6 +12,8 @@ import com.example.demo.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -30,8 +32,13 @@ public class CommentService {
 
     public CommentResponse createComment(CommentCreateRequest request, UUID id) {
 	CommentEntity entity = commentMapper.toEntity(request);
+	entity.setText(request.getText());
 	entity.setUser(userRepository.findById(id).orElseThrow());
 	entity.setVideo(videoRepository.findById(request.getVideoId()).orElseThrow());
+	entity.setCreationDate(new Timestamp(new Date().getTime()));
+	if (Objects.nonNull(request.getCommentId())) {
+	    entity.setComment(commentRepository.findById(request.getCommentId()).orElseThrow());
+	}
 
 	entity = commentRepository.save(entity);
 	var result = commentMapper.toDto(entity);
@@ -54,9 +61,10 @@ public class CommentService {
 
     public List<CommentResponse> getCommentsByVideo(UUID videoId) {
 	var comments = commentRepository.findCommentEntitiesByVideoId(videoId).stream()
-		.filter(c -> c.getComment() == null).map(commentMapper::toDto).collect(Collectors.toList());
+		.filter(c -> c.getComment() == null)
+		.map(c -> CommentResponse.builder().user(userMapper.doMap(c.getUser())).text(c.getText())
+			.creationDate(c.getCreationDate().toString()).id(c.getId()).build()).toList();
 	comments.forEach(this::addCommentResponse);
-	comments.forEach(c -> c.setUser(userMapper.doMap(userRepository.findUserEntityByCommentsId(c.getId()))));
 	return comments;
     }
 

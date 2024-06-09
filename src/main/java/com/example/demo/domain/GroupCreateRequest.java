@@ -17,5 +17,5 @@ public class GroupCreateRequest {
 
     private String description;
 
-    private List<UserRequest> users;
+    private List<UUID> users;
 }

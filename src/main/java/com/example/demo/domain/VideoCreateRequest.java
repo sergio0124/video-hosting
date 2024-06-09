@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -28,6 +27,4 @@ public class VideoCreateRequest {
 
     @NotNull
     private UUID playlistId;
-
-    private List<TimeCodeRequest> timeCodes;
 }

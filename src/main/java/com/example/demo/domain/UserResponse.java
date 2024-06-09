@@ -25,7 +25,7 @@ public class UserResponse {
 
     private Timestamp registrationDate;
 
-    private Role role;
+    private String role;
 
     private boolean blocked;
 }

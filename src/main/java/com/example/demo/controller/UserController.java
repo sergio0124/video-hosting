@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.domain.ProfileUpdateRequest;
 import com.example.demo.domain.UserCreateJsonRequest;
 import com.example.demo.domain.UserCreateRequest;
 import com.example.demo.domain.UserResponse;
@@ -7,6 +8,7 @@ import com.example.demo.domain.UserUpdateRequest;
 import com.example.demo.domain.entity.UserEntity;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.MediaType;
@@ -48,7 +50,7 @@ public class UserController {
     }
 
     @PutMapping(value = "/app/user", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public UserResponse updateUser(@RequestBody UserUpdateRequest request) throws IOException {
+    public UserResponse updateUser(@RequestBody UserUpdateRequest request) {
 	return userService.updateUser(request);
     }
 
@@ -58,7 +60,12 @@ public class UserController {
     }
 
     @PostMapping("/app/users/json")
-    public void createUserJson(@RequestBody UserCreateJsonRequest request) throws IOException {
+    public void createUserJson(@RequestBody UserCreateJsonRequest request) {
 	userService.createUsers(request);
+    }
+
+    @PutMapping(value = "/app/auth/profile")
+    public void updateUser(@RequestBody @Valid ProfileUpdateRequest request) {
+	userService.updateProfile(request);
     }
 }

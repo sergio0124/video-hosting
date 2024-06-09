@@ -1,8 +1,8 @@
 package com.example.demo.domain;
 
-import com.example.demo.domain.entity.enums.Role;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +11,8 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserUpdateRequest {
+@Builder
+public class ProfileUpdateRequest {
 
     @NotNull
     private UUID id;
@@ -22,7 +23,9 @@ public class UserUpdateRequest {
 
     private String fullname;
 
-    private Role role;
-
     private String status;
+
+    private String oldPass;
+
+    private String newPass;
 }

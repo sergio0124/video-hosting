@@ -11,4 +11,7 @@ import java.util.UUID;
 public interface VideoRepository extends JpaRepository<VideoEntity, UUID> {
 
     List<VideoEntity> findVideoEntitiesByPlaylistIdAndNameContainsIgnoreCase(UUID playlistId, String name);
+
+    List<VideoEntity> findVideoEntitiesByPlaylist_IsPublicAndNameContainsIgnoreCase(Boolean playlist_isPublic,
+            String name);
 }

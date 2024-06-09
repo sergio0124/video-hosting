@@ -5,13 +5,13 @@ import com.example.demo.domain.GroupResponse;
 import com.example.demo.domain.GroupUpdateRequest;
 import com.example.demo.domain.entity.GroupEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface GroupMapper {
 
+    @Mapping(target = "users", ignore = true)
     GroupEntity toEntityFromCreateRequest(GroupCreateRequest request);
-
-    GroupEntity toEntityFromUpdateRequest(GroupUpdateRequest request);
 
     GroupResponse toResponse(GroupEntity groupEntity);
 }

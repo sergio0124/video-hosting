@@ -45,4 +45,9 @@ public class VideoController {
 	    @AuthenticationPrincipal UserEntity user) {
 	videoService.createVideo(request, user.getId());
     }
+
+    @GetMapping("/app/video/recomedations")
+    public List<VideoResponse> getRecommendedVideos(@RequestParam(required = false) String search){
+	return videoService.getVideosByRecs(search);
+    }
 }

@@ -46,7 +46,8 @@ public class VideoService {
 	var result = videoMapper.toResponse(videoEntity);
 	result.setTimeCodes(videoEntity.getTimeCodes().stream().map(timeCodeMapper::toDto).toList());
 	result.setComments(commentService.getCommentsByVideo(result.getId()));
-	result.setUser(userMapper.doMap(videoEntity.getPlaylist().getUser())); return result;
+	result.setUser(userMapper.doMap(videoEntity.getPlaylist().getUser()));
+	return result;
     }
 
     public void createVideo(VideoCreateRequest request, UUID id) {
@@ -55,16 +56,21 @@ public class VideoService {
 		.creationTime(new Timestamp(new Date().getTime())).imageUrl(request.getImageUrl())
 		.description(request.getDescription()).name(request.getName()).build();
 	videoEntity = videoRepository.save(videoEntity);
-	validateTimeCodes(videoEntity.getId(), request.getTimeCodes());
+	//	validateTimeCodes(videoEntity.getId(), request.getTimeCodes());
     }
 
     public void validateTimeCodes(UUID videoId, List<TimeCodeRequest> request) {
 	timeCodeRepository.deleteTimeCodeEntitiesByVideoId(videoId);
 
 	VideoEntity video = videoRepository.findById(videoId).orElseThrow();
-	List<TimeCodeEntity> timeCodeEntities = request.stream().map(c -> TimeCodeEntity.builder()
-		.time(c.getTime()).video(video).description(c.getDescription()).build())
-		.toList();
+	List<TimeCodeEntity> timeCodeEntities = request.stream()
+		.map(c -> TimeCodeEntity.builder().time(c.getTime()).video(video).description(c.getDescription())
+			.build()).toList();
 	timeCodeRepository.saveAll(timeCodeEntities);
+    }
+
+    public List<VideoResponse> getVideosByRecs(String search) {
+	return videoRepository.findVideoEntitiesByPlaylist_IsPublicAndNameContainsIgnoreCase(Boolean.TRUE, search)
+		.stream().map(videoMapper::toResponse).toList();
     }
 }

@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -24,8 +26,8 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-@ToString(exclude = {"user", "permissions"})
-@EqualsAndHashCode(exclude = {"user", "permissions"})
+@ToString(exclude = { "user", "permissions" })
+@EqualsAndHashCode(exclude = { "user", "permissions" })
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -51,6 +53,8 @@ public class GroupEntity {
     @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<PermissionEntity> permissions;
 
-    @ManyToMany(mappedBy = "groupUsers", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(name = "group_user", joinColumns = { @JoinColumn(name = "group_id") }, inverseJoinColumns = {
+	    @JoinColumn(name = "user_id") })
     private List<UserEntity> users = new ArrayList<>();
 }
