@@ -29,36 +29,41 @@ public class CommentService {
     private final UserMapper userMapper;
 
     public CommentResponse createComment(CommentCreateRequest request, UUID id) {
-        CommentEntity entity = commentMapper.toEntity(request);
-        entity.setUser(userRepository.findById(id).orElseThrow());
-        entity.setVideo(videoRepository.findById(request.getVideoId()).orElseThrow());
+	CommentEntity entity = commentMapper.toEntity(request);
+	entity.setUser(userRepository.findById(id).orElseThrow());
+	entity.setVideo(videoRepository.findById(request.getVideoId()).orElseThrow());
 
-        entity = commentRepository.save(entity);
-        var result = commentMapper.toDto(entity);
-        result.setUser(userMapper.doMap(entity.getUser()));
+	entity = commentRepository.save(entity);
+	var result = commentMapper.toDto(entity);
+	result.setUser(userMapper.doMap(entity.getUser()));
 
-        return result;
-    }
-
-    private List<CommentResponse> getInnerComments(UUID commentId) {
-        var comments = commentRepository.findCommentEntitiesByCommentId(commentId);
-        return comments.stream().map(c -> {
-            CommentResponse response = commentMapper.toDto(c);
-            response.setUser(userMapper.doMap(c.getUser()));
-            response.setComments(getInnerComments(response.getId()));
-            return response;
-        }).collect(Collectors.toList());
+	return result;
     }
 
     private CommentResponse toResponse(CommentEntity commentEntity) {
-        CommentResponse commentResponse = commentMapper.toDto(commentEntity);
-        commentResponse.setUser(userMapper.doMap(commentEntity.getUser()));
-        return commentResponse;
+	CommentResponse commentResponse = commentMapper.toDto(commentEntity);
+	commentResponse.setUser(userMapper.doMap(commentEntity.getUser()));
+	return commentResponse;
     }
 
     public CommentResponse updateComment(CommentUpdateRequest request) {
-        CommentEntity commentEntity = commentRepository.findById(request.getId()).orElseThrow();
-        commentEntity.setText(request.getText());
-        return toResponse(commentRepository.save(commentEntity));
+	CommentEntity commentEntity = commentRepository.findById(request.getId()).orElseThrow();
+	commentEntity.setText(request.getText());
+	return toResponse(commentRepository.save(commentEntity));
+    }
+
+    public List<CommentResponse> getCommentsByVideo(UUID videoId) {
+	var comments = commentRepository.findCommentEntitiesByVideoId(videoId).stream()
+		.filter(c -> c.getComment() == null).map(commentMapper::toDto).collect(Collectors.toList());
+	comments.forEach(this::addCommentResponse);
+	comments.forEach(c -> c.setUser(userMapper.doMap(userRepository.findUserEntityByCommentsId(c.getId()))));
+	return comments;
+    }
+
+    private void addCommentResponse(CommentResponse commentResponse) {
+	var childs = commentRepository.findCommentEntitiesByCommentId(commentResponse.getId()).stream()
+		.map(commentMapper::toDto).toList();
+	commentResponse.setComments(childs);
+	commentResponse.getComments().forEach(this::addCommentResponse);
     }
 }

@@ -35,4 +35,6 @@ public class VideoResponse {
     private List<TimeCodeResponse> timeCodes;
 
     private List<CommentResponse> comments;
+
+    private UserResponse user;
 }

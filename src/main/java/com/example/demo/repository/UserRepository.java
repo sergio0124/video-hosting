@@ -21,4 +21,6 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     List<UserEntity> findUserEntitiesByGroupsId(UUID id);
 
     Optional<UserEntity> findUserEntityByUsername(String username);
+
+    UserEntity findUserEntityByCommentsId(UUID comments_id);
 }

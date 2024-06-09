@@ -11,4 +11,6 @@ import java.util.UUID;
 public interface CommentRepository extends JpaRepository<CommentEntity, UUID> {
 
     List<CommentEntity> findCommentEntitiesByCommentId(UUID commentId);
+
+    List<CommentEntity> findCommentEntitiesByVideoId(UUID videoId);
 }

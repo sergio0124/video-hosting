@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.domain.StringResponse;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,7 @@ public class ResourceController {
 	return Files.readAllBytes(fileNameAndPath);
     }
 
-    @PostMapping("/upload/user/{id}")
+    @PostMapping("/upload/user/image/{id}")
     public void uploadImage(@RequestParam("file") MultipartFile file, @PathVariable UUID id) throws IOException {
 	String fileName = id + "." + file.getOriginalFilename().split("\\.")[1];
 	Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, fileName);
@@ -56,9 +57,18 @@ public class ResourceController {
 	userService.updatePhoto(id, fileName);
     }
 
+    @PostMapping("/app/upload/video")
+    public StringResponse uploadVideo(@RequestParam("file") MultipartFile file) throws IOException {
+	String fileName = UUID.randomUUID() + "." + file.getOriginalFilename().split("\\.")[1];
+	Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, fileName);
+	Files.write(fileNameAndPath, file.getBytes());
+
+	return new StringResponse(fileName);
+    }
+
     @GetMapping(value = "/app/video/{title}", produces = "video/mp4")
     public Mono<Resource> getVideos(@PathVariable String title) {
-	Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, "11.mp4");
+	Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, title);
 	return Mono.fromSupplier(() -> new FileSystemResource(fileNameAndPath));
 
     }
