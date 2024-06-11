@@ -49,6 +49,7 @@ public class TimeCodeService {
     public void updateTimeCode(TimeCodeRequest request) {
 	TimeCodeEntity timeCodeEntity = timeCodeRepository.findById(request.getId()).orElseThrow();
 	timeCodeEntity.setDescription(request.getDescription());
+	timeCodeEntity.setTime(request.getTime());
 	timeCodeRepository.save(timeCodeEntity);
     }
 }

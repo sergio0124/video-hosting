@@ -14,7 +14,7 @@ public class TimeCodeRequest {
 
     private UUID id;
 
-    @Pattern(regexp = "^\\d{0,2}:\\d{2}:[0-5]\\d$")
+    @Pattern(regexp = "^\\d{0,2}:\\d{0,2}:[0-5]\\d$")
     private String time;
 
     private String description;
