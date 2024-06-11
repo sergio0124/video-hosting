@@ -18,4 +18,6 @@ public interface GroupRepository extends JpaRepository<GroupEntity, UUID> {
 
     List<GroupEntity> findGroupEntitiesByUserIdAndNameContainsIgnoreCaseOrUserIdAndDescriptionContainsIgnoreCase(
             UUID user_id, String name, UUID user_id2, String description);
+
+    List<GroupEntity> findDistinctByPermissionsPlaylistId(UUID id);
 }

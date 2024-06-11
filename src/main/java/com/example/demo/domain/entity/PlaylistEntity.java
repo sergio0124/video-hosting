@@ -18,6 +18,7 @@ import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,8 +51,8 @@ public class PlaylistEntity {
     private UserEntity user;
 
     @OneToMany(mappedBy = "playlist", fetch = FetchType.EAGER)
-    private List<PermissionEntity> permissions;
+    private List<PermissionEntity> permissions = new ArrayList<>();
 
     @OneToMany(mappedBy = "playlist", fetch = FetchType.EAGER)
-    private List<VideoEntity> videos;
+    private List<VideoEntity> videos = new ArrayList<>();
 }

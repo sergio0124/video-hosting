@@ -17,5 +17,5 @@ public interface PlaylistRepository extends JpaRepository<PlaylistEntity, UUID> 
 
     List<PlaylistEntity> findPlaylistEntitiesByUserId(UUID userId);
 
-    List<PlaylistEntity> findPlaylistEntitiesByUserIdAndAndNameContainsIgnoreCase(UUID userId, String name);
+    List<PlaylistEntity> findPlaylistEntitiesByUserIdAndNameContainsIgnoreCase(UUID userId, String name);
 }

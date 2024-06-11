@@ -19,6 +19,7 @@ import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -53,11 +54,11 @@ public class VideoEntity {
     private PlaylistEntity playlist;
 
     @OneToMany(mappedBy = "video", fetch = FetchType.EAGER)
-    private List<TimeCodeEntity> timeCodes;
+    private List<TimeCodeEntity> timeCodes = new ArrayList<>();
 
     @OneToMany(mappedBy = "video", fetch = FetchType.EAGER)
-    private List<VisitEntity> visits;
+    private List<VisitEntity> visits = new ArrayList<>();
 
     @OneToMany(mappedBy = "video", fetch = FetchType.EAGER)
-    private List<CommentEntity> comments;
+    private List<CommentEntity> comments = new ArrayList<>();
 }
