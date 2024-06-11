@@ -13,5 +13,6 @@ public interface GroupMapper {
     @Mapping(target = "users", ignore = true)
     GroupEntity toEntityFromCreateRequest(GroupCreateRequest request);
 
+    @Mapping(target = "count", expression = "java(groupEntity.getUsers().size())")
     GroupResponse toResponse(GroupEntity groupEntity);
 }

@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.domain.StatGroupResponse;
 import com.example.demo.domain.StatPlaylistResponse;
 import com.example.demo.service.StatService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class StatisticsController {
     }
 
     @GetMapping("/app/stat/group/{id}")
-    public StatPlaylistResponse getPlaylistStatistics(@PathVariable UUID id) {
-        return statService.getPlaylistStatistics(id);
+    public StatGroupResponse getGroupStatistics(@PathVariable UUID id) {
+        return statService.getGroupStatistics(id);
     }
 }

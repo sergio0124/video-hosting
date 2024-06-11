@@ -1,9 +1,14 @@
 package com.example.demo.service;
 
+import com.example.demo.domain.StatGroupPlaylistResponse;
+import com.example.demo.domain.StatGroupResponse;
+import com.example.demo.domain.StatGroupUserResponse;
 import com.example.demo.domain.StatPlaylistResponse;
 import com.example.demo.domain.StatPlaylistUserResponse;
 import com.example.demo.domain.StatPlaylistVideoResponse;
+import com.example.demo.domain.entity.GroupEntity;
 import com.example.demo.domain.entity.PlaylistEntity;
+import com.example.demo.mapper.UserMapper;
 import com.example.demo.repository.GroupRepository;
 import com.example.demo.repository.PlaylistRepository;
 import com.example.demo.repository.UserRepository;
@@ -26,6 +31,7 @@ public class StatService {
     private final PlaylistRepository playlistRepository;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private final UserMapper userMapper;
 
     public StatPlaylistResponse getPlaylistStatistics(UUID id) {
 	var result = new StatPlaylistResponse();
@@ -80,5 +86,48 @@ public class StatService {
 	    response.setVisitCount(c.getVisits().size());
 	    return response;
 	}).toList();
+    }
+
+    public StatGroupResponse getGroupStatistics(UUID id) {
+	var result = new StatGroupResponse();
+
+	var group = groupRepository.findById(id).orElseThrow();
+	result.setPermissionsCount(group.getPermissions().size());
+
+	result.setStats(getGroupStats(group));
+
+	result.setPlaylists(getGroupPlaylists(group));
+
+	return result;
+    }
+
+    private List<StatGroupPlaylistResponse> getGroupPlaylists(GroupEntity group) {
+	List<StatGroupPlaylistResponse> result = new ArrayList<>();
+	for (var permission : group.getPermissions()) {
+	    var playlist = permission.getPlaylist();
+	    result.add(new StatGroupPlaylistResponse(playlist.getId(), playlist.getName(), playlist.getDescription(),
+		    permission.getDescription()));
+	}
+	return result;
+    }
+
+    private List<StatGroupUserResponse> getGroupStats(GroupEntity group) {
+	List<StatGroupUserResponse> users = group.getUsers().stream()
+		.map(c -> new StatGroupUserResponse(c.getId(), c.getUsername(), null, null, null)).toList();
+
+	List<StatGroupUserResponse> result = new ArrayList<>();
+	for (var user : users) {
+	    for (var permission : group.getPermissions()) {
+		var playlist = permission.getPlaylist();
+		for (var video : playlist.getVideos()) {
+		    result.add(new StatGroupUserResponse(user.getUserId(), user.getUsername(), playlist.getName(),
+			    video.getName(),
+			    !video.getVisits().stream().filter(c -> c.getUser().getId() == user.getUserId()).toList()
+				    .isEmpty()));
+		}
+	    }
+	}
+
+	return result;
     }
 }
