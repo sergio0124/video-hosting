@@ -14,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CreatePermissionRequest {
+public class PermissionCreateRequest {
 
     private String description;
 

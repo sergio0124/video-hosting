@@ -6,11 +6,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class PermissionResponse {
+
+    private UUID id;
 
     @JsonProperty("creation_date")
     private String creationDate;

@@ -12,5 +12,5 @@ public interface PermissionRepository extends JpaRepository<PermissionEntity, UU
 
     List<PermissionEntity> findPermissionEntitiesByPlaylistUserId(UUID playlist_user_id);
 
-    List<PermissionEntity> findPermissionEntitiesByPlaylistUserIdAndPlaylistId(UUID playlist_user_id, UUID playlist_id);
+    List<PermissionEntity> findPermissionEntitiesByPlaylistId(UUID playlist_id);
 }
