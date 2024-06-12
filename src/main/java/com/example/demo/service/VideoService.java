@@ -13,6 +13,7 @@ import com.example.demo.repository.PlaylistRepository;
 import com.example.demo.repository.TimeCodeRepository;
 import com.example.demo.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -70,7 +71,8 @@ public class VideoService {
     }
 
     public List<VideoResponse> getVideosByRecs(String search) {
-	return videoRepository.findVideoEntitiesByPlaylist_IsPublicAndNameContainsIgnoreCase(Boolean.TRUE, search)
-		.stream().map(videoMapper::toResponse).toList();
+	Sort sort = Sort.by(Sort.Direction.DESC, "creationTime");
+	return videoRepository.findVideoEntitiesByPlaylist_IsPublicAndNameContainsIgnoreCaseOrPlaylist_IsPublicAndDescriptionContainsIgnoreCase(
+		Boolean.TRUE, search, Boolean.TRUE, search, sort).stream().map(videoMapper::toResponse).toList();
     }
 }

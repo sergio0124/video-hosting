@@ -74,4 +74,8 @@ public class CommentService {
 	commentResponse.setComments(childs);
 	commentResponse.getComments().forEach(this::addCommentResponse);
     }
+
+    public void deleteComment(UUID id) {
+	commentRepository.deleteById(id);
+    }
 }
