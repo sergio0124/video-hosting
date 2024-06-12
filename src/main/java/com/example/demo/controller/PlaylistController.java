@@ -7,6 +7,7 @@ import com.example.demo.domain.entity.UserEntity;
 import com.example.demo.repository.PlaylistRepository;
 import com.example.demo.service.PlaylistService;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,24 +29,22 @@ public class PlaylistController {
     private final PlaylistService playlistService;
 
     @PostMapping("/app/playlist")
-    public void createPlaylist(@RequestBody PlaylistCreateRequest request,
-	    @AuthenticationPrincipal UserEntity user){
+    public void createPlaylist(@RequestBody PlaylistCreateRequest request, @AuthenticationPrincipal UserEntity user) {
 	playlistService.createPlaylist(request, user.getId());
     }
 
     @PutMapping("/app/playlist")
-    public void updatePlaylist(@RequestBody PlaylistUpdateRequest request){
+    public void updatePlaylist(@RequestBody PlaylistUpdateRequest request) {
 	playlistService.updatePlaylist(request);
     }
 
     @DeleteMapping("/app/playlist")
-    public void deletePlaylist(@RequestParam UUID id){
+    public void deletePlaylist(@RequestParam UUID id) {
 	playlistService.deletePlaylist(id);
     }
 
     @GetMapping("/app/playlists")
-    public List<PlaylistResponse> getPlaylists(@RequestParam Boolean isPublic,
-	    @RequestParam String search) {
+    public List<PlaylistResponse> getPlaylists(@RequestParam Boolean isPublic, @RequestParam String search) {
 	return playlistService.getPlaylists(search, isPublic);
     }
 
@@ -70,4 +69,16 @@ public class PlaylistController {
 	return playlistService.getGroupPlaylists(id);
     }
 
+    @GetMapping("/app/employee/permissions/playlists")
+    public List<PlaylistResponse> getPlaylistsByPersonalPermission(@AuthenticationPrincipal UserEntity user,
+	    @RequestParam(required = false) String search) {
+	return playlistService.getPlaylistsByPersonalPermission(user.getId(), search);
+    }
+
+    @GetMapping("/app/playlists/creator/{id}")
+    public List<PlaylistResponse> getPlaylistsByCreator(@PathVariable UUID id,
+	    @RequestParam(required = false) String search, @RequestParam(required = false) Boolean isPrivate,
+	    @AuthenticationPrincipal UserEntity user) {
+	return playlistService.getPlaylistsByCreatorAndStatus(id, search, isPrivate, user.getId());
+    }
 }

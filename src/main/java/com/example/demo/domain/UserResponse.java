@@ -19,11 +19,9 @@ public class UserResponse {
 
     private String mail;
 
-    private String password;
-
     private String fullname;
 
-    private Timestamp registrationDate;
+    private String registrationDate;
 
     private String role;
 

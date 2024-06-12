@@ -14,6 +14,7 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,7 +50,7 @@ public class UserController {
 	return userService.createUser(request);
     }
 
-    @PutMapping(value = "/app/user", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PutMapping(value = "/app/user")
     public UserResponse updateUser(@RequestBody UserUpdateRequest request) {
 	return userService.updateUser(request);
     }
@@ -57,6 +58,11 @@ public class UserController {
     @GetMapping("/app/user")
     public UserResponse getUser(@AuthenticationPrincipal UserEntity user) {
 	return userMapper.doMap(user);
+    }
+
+    @GetMapping("/app/user/{id}")
+    public UserResponse getUser(@PathVariable UUID id) {
+	return userService.getUserById(id);
     }
 
     @PostMapping("/app/users/json")
@@ -67,5 +73,10 @@ public class UserController {
     @PutMapping(value = "/app/auth/profile")
     public void updateUser(@RequestBody @Valid ProfileUpdateRequest request) {
 	userService.updateProfile(request);
+    }
+
+    @GetMapping("/app/creators")
+    public List<UserResponse> getCreators(@RequestParam(required = false) String search) {
+	return userService.getCreators(search);
     }
 }

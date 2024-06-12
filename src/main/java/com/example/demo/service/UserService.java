@@ -6,6 +6,7 @@ import com.example.demo.domain.UserCreateRequest;
 import com.example.demo.domain.UserResponse;
 import com.example.demo.domain.UserUpdateRequest;
 import com.example.demo.domain.entity.UserEntity;
+import com.example.demo.domain.entity.enums.Role;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SealedObject;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -99,5 +101,17 @@ public class UserService {
 	}
 
 	userRepository.save(userEntity);
+    }
+
+    public List<UserResponse> getCreators(String search) {
+	if (StringUtils.isBlank(search)) {
+	    search = "";
+	}
+	return userRepository.findUserEntitiesByRoleAndFullnameContainsIgnoreCaseOrRoleAndUsernameContainsIgnoreCase(
+		Role.CREATOR, search, Role.CREATOR, search).stream().map(userMapper::doMap).toList();
+    }
+
+    public UserResponse getUserById(UUID id) {
+	return userMapper.doMap(userRepository.findById(id).orElseThrow());
     }
 }

@@ -10,6 +10,7 @@ import com.example.demo.mapper.VideoMapper;
 import com.example.demo.repository.PlaylistRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -96,5 +97,27 @@ public class PlaylistService {
 
     public List<PlaylistResponse> getGroupPlaylists(UUID id) {
 	return playlistRepository.findDistinctByPermissionsGroupId(id).stream().map(playlistMapper::toDto).toList();
+    }
+
+    public List<PlaylistResponse> getPlaylistsByPersonalPermission(UUID id, String search) {
+	if (StringUtils.isBlank(search)) {
+	    search = "";
+	}
+	return playlistRepository.findPlaylistEntitiesByPermissionsUserIdAndNameContainsIgnoreCase(id, search).stream()
+		.map(playlistMapper::toDto).toList();
+    }
+
+    public List<PlaylistResponse> getPlaylistsByCreatorAndStatus(UUID creatorId, String search, Boolean isPrivate,
+	    UUID userId) {
+	if (StringUtils.isBlank(search)) {
+	    search = "";
+	}
+	if (BooleanUtils.isNotTrue(isPrivate)) {
+	    return playlistRepository.findPlaylistEntitiesByUserIdAndIsPublicAndNameContainsIgnoreCase(creatorId,
+		    Boolean.TRUE, search).stream().map(playlistMapper::toDto).toList();
+	} else {
+	    return playlistRepository.findDistinctByPermissionsGroupUsersIdAndNameContainsIgnoreCaseAndUserIdOrPermissionsUserIdAndNameContainsIgnoreCaseAndUserId(
+		    userId, search, creatorId, userId, search, creatorId).stream().map(playlistMapper::toDto).toList();
+	}
     }
 }

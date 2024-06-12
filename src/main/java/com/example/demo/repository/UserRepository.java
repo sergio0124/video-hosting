@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import com.example.demo.domain.entity.UserEntity;
+import com.example.demo.domain.entity.enums.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -24,4 +25,7 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     UserEntity findUserEntityByCommentsId(UUID commentsId);
 
     List<UserEntity> findDistinctByPermissionsPlaylistId(UUID playlistId);
+
+    List<UserEntity> findUserEntitiesByRoleAndFullnameContainsIgnoreCaseOrRoleAndUsernameContainsIgnoreCase(Role role,
+            String fullname, Role role2, String username);
 }
