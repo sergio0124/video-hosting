@@ -1,5 +1,6 @@
 package com.example.demo.domain.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -50,9 +51,9 @@ public class PlaylistEntity {
     @ManyToOne
     private UserEntity user;
 
-    @OneToMany(mappedBy = "playlist", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "playlist", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<PermissionEntity> permissions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "playlist", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "playlist", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<VideoEntity> videos = new ArrayList<>();
 }

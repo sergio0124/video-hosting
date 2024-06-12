@@ -10,12 +10,18 @@ import java.util.UUID;
 @Repository
 public interface PlaylistRepository extends JpaRepository<PlaylistEntity, UUID> {
 
-    List<PlaylistEntity> findPlaylistEntitiesByIsPublicAndNameContainsIgnoreCase(Boolean isPublic, String name);
+    List<PlaylistEntity> findPlaylistEntitiesByIsPublicAndNameContainsIgnoreCaseOrIsPublicAndDescriptionContainsIgnoreCase(
+            Boolean isPublic, String name, Boolean isPublic2, String description);
+
+    List<PlaylistEntity> findPlaylistEntitiesByIsPublic(Boolean isPublic);
 
     List<PlaylistEntity> findPlaylistEntitiesByUserIdAndNameContainsIgnoreCaseAndIsPublic(UUID userId, String name,
             Boolean isPublic);
 
     List<PlaylistEntity> findPlaylistEntitiesByUserId(UUID userId);
 
-    List<PlaylistEntity> findPlaylistEntitiesByUserIdAndNameContainsIgnoreCase(UUID userId, String name);
+    List<PlaylistEntity> findPlaylistEntitiesByUserIdAndNameContainsIgnoreCaseAndUserIdAndDescriptionContainsIgnoreCase(
+            UUID user_id, String name, UUID user_id2, String description);
+
+    List<PlaylistEntity> findDistinctByPermissionsGroupId(UUID permissions_group_id);
 }

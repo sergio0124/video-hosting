@@ -65,8 +65,7 @@ public class GroupService {
 
 	return groups.stream()
 		.map(c -> GroupResponse.builder().creationDate(c.getCreationDate()).description(c.getDescription())
-			.count(c.getUsers().size()).id(c.getId()).name(c.getName()).build())
-		.toList();
+			.count(c.getUsers().size()).id(c.getId()).name(c.getName()).build()).toList();
     }
 
     public List<GroupResponse> getGroupsByUser(String search, UUID id) {
@@ -77,8 +76,7 @@ public class GroupService {
 
 	return groups.stream()
 		.map(c -> GroupResponse.builder().creationDate(c.getCreationDate()).description(c.getDescription())
-			.count(c.getUsers().size()).id(c.getId()).name(c.getName()).build())
-		.toList();
+			.count(c.getUsers().size()).id(c.getId()).name(c.getName()).build()).toList();
     }
 
     public GroupResponse getGroup(UUID id) {
@@ -99,5 +97,10 @@ public class GroupService {
 		.map(c -> GroupResponse.builder().creationDate(c.getCreationDate()).description(c.getDescription())
 			.count(c.getUsers().size()).id(c.getId()).name(c.getName()).build())
 		.collect(Collectors.toList());
+    }
+
+    public List<GroupResponse> getGroupsByUserPermissions(UUID id, String search) {
+	return groupRepository.findDistinctByUsersIdAndNameContainsIgnoreCase(id, search).stream()
+		.map(groupMapper::toResponse).toList();
     }
 }

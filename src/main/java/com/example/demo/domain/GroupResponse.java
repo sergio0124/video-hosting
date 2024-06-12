@@ -26,6 +26,8 @@ public class GroupResponse {
 
     private String description;
 
+    private UserResponse creator;
+
     private Integer count;
 
     private List<UserResponse> users = new ArrayList<>();

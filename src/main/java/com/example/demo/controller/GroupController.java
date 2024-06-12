@@ -59,4 +59,10 @@ public class GroupController {
     public GroupResponse getGroup(@RequestParam UUID id) {
 	return groupService.getGroup(id);
     }
+
+
+    @GetMapping("/app/employee/groups")
+    public List<GroupResponse> getGroupsByUserPermissions(@AuthenticationPrincipal UserEntity user, @RequestParam(required = false) String search) {
+	return groupService.getGroupsByUserPermissions(user.getId(), search);
+    }
 }

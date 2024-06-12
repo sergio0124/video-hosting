@@ -26,6 +26,8 @@ public class PlaylistResponse {
 
     private Integer videoCount;
 
+    private Integer visitsCount;
+
     private List<VideoResponse> videoResponses;
 
     private UserResponse userResponse;

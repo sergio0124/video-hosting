@@ -1,5 +1,6 @@
 package com.example.demo.domain.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -49,6 +50,6 @@ public class CommentEntity {
     @ManyToOne
     private CommentEntity comment;
 
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<CommentEntity> comments;
 }

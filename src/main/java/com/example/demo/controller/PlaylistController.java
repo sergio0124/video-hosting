@@ -59,4 +59,15 @@ public class PlaylistController {
 	    @RequestParam(name = "search", required = false) String search) {
 	return playlistService.getPlaylistsByCreator(user.getId(), search);
     }
+
+    @GetMapping("/app/employee/playlists")
+    public List<PlaylistResponse> getPublicPlaylists(@RequestParam(name = "search", required = false) String search) {
+	return playlistService.getPublicPlaylists(search);
+    }
+
+    @GetMapping("/app/employee/group/playlists/{id}")
+    public List<PlaylistResponse> getGroupPlaylists(@PathVariable UUID id) {
+	return playlistService.getGroupPlaylists(id);
+    }
+
 }

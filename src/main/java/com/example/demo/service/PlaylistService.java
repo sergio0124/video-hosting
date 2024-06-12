@@ -54,7 +54,8 @@ public class PlaylistService {
     }
 
     public List<PlaylistResponse> getPlaylists(String search, Boolean isPublic) {
-	var playlists = playlistRepository.findPlaylistEntitiesByIsPublicAndNameContainsIgnoreCase(isPublic, search);
+	var playlists = playlistRepository.findPlaylistEntitiesByIsPublicAndNameContainsIgnoreCaseOrIsPublicAndDescriptionContainsIgnoreCase(
+		isPublic, search, isPublic, search);
 	return playlists.stream().map(c -> {
 	    var model = playlistMapper.toDto(c);
 	    model.setVideoCount(c.getVideos().size());
@@ -76,8 +77,24 @@ public class PlaylistService {
 	if (StringUtils.isBlank(search)) {
 	    result = playlistRepository.findPlaylistEntitiesByUserId(id);
 	} else {
-	    result = playlistRepository.findPlaylistEntitiesByUserIdAndNameContainsIgnoreCase(id, search);
+	    result = playlistRepository.findPlaylistEntitiesByUserIdAndNameContainsIgnoreCaseAndUserIdAndDescriptionContainsIgnoreCase(
+		    id, search, id, search);
 	}
 	return result.stream().map(playlistMapper::toDto).toList();
+    }
+
+    public List<PlaylistResponse> getPublicPlaylists(String search) {
+	List<PlaylistEntity> result;
+	if (StringUtils.isBlank(search)) {
+	    result = playlistRepository.findPlaylistEntitiesByIsPublic(Boolean.TRUE);
+	} else {
+	    result = playlistRepository.findPlaylistEntitiesByIsPublicAndNameContainsIgnoreCaseOrIsPublicAndDescriptionContainsIgnoreCase(
+		    Boolean.TRUE, search, Boolean.TRUE, search);
+	}
+	return result.stream().map(playlistMapper::toDto).toList();
+    }
+
+    public List<PlaylistResponse> getGroupPlaylists(UUID id) {
+	return playlistRepository.findDistinctByPermissionsGroupId(id).stream().map(playlistMapper::toDto).toList();
     }
 }

@@ -51,7 +51,7 @@ public class GroupEntity {
     @ManyToOne
     private UserEntity user;
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PermissionEntity> permissions;
 
     @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)

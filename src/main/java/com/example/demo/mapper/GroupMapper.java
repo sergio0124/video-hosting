@@ -6,13 +6,18 @@ import com.example.demo.domain.GroupUpdateRequest;
 import com.example.demo.domain.entity.GroupEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring")
-public interface GroupMapper {
+public abstract class GroupMapper {
+
+    @Autowired
+    UserMapper userMapper;
 
     @Mapping(target = "users", ignore = true)
-    GroupEntity toEntityFromCreateRequest(GroupCreateRequest request);
+    public abstract GroupEntity toEntityFromCreateRequest(GroupCreateRequest request);
 
+    @Mapping(target = "creator", expression = "java(userMapper.doMap(groupEntity.getUser()))")
     @Mapping(target = "count", expression = "java(groupEntity.getUsers().size())")
-    GroupResponse toResponse(GroupEntity groupEntity);
+    public abstract GroupResponse toResponse(GroupEntity groupEntity);
 }
