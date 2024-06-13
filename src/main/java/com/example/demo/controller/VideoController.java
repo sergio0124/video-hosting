@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.domain.VideoCreateRequest;
 import com.example.demo.domain.VideoResponse;
+import com.example.demo.domain.VideoUpdateRequest;
 import com.example.demo.domain.entity.UserEntity;
 import com.example.demo.service.VideoService;
 import jakarta.validation.Valid;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,5 +51,10 @@ public class VideoController {
     @GetMapping("/app/video/recomedations")
     public List<VideoResponse> getRecommendedVideos(@RequestParam(required = false) String search){
 	return videoService.getVideosByRecs(search);
+    }
+
+    @PutMapping("/app/video")
+    public void updateVideo(@RequestBody @Valid VideoUpdateRequest request) {
+	videoService.updateVideo(request);
     }
 }

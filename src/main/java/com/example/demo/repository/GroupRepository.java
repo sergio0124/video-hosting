@@ -2,6 +2,9 @@ package com.example.demo.repository;
 
 import com.example.demo.domain.entity.GroupEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,4 +25,8 @@ public interface GroupRepository extends JpaRepository<GroupEntity, UUID> {
     List<GroupEntity> findDistinctByPermissionsPlaylistId(UUID id);
 
     List<GroupEntity> findDistinctByUsersIdAndNameContainsIgnoreCase(UUID usersId, String name);
+
+    @Modifying
+    @Query("delete from GroupEntity v where v.id=:id")
+    void deleteById(@Param("id") UUID id);
 }

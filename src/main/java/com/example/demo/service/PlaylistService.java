@@ -78,7 +78,7 @@ public class PlaylistService {
 	if (StringUtils.isBlank(search)) {
 	    result = playlistRepository.findPlaylistEntitiesByUserId(id);
 	} else {
-	    result = playlistRepository.findPlaylistEntitiesByUserIdAndNameContainsIgnoreCaseAndUserIdAndDescriptionContainsIgnoreCase(
+	    result = playlistRepository.findPlaylistEntitiesByUserIdAndNameContainsIgnoreCaseOrUserIdAndDescriptionContainsIgnoreCase(
 		    id, search, id, search);
 	}
 	return result.stream().map(playlistMapper::toDto).toList();

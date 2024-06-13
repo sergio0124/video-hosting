@@ -114,4 +114,8 @@ public class UserService {
     public UserResponse getUserById(UUID id) {
 	return userMapper.doMap(userRepository.findById(id).orElseThrow());
     }
+
+    public void deleteUser(UUID id) {
+	userRepository.deleteById(id);
+    }
 }

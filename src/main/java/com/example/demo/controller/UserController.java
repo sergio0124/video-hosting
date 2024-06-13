@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -78,5 +79,10 @@ public class UserController {
     @GetMapping("/app/creators")
     public List<UserResponse> getCreators(@RequestParam(required = false) String search) {
 	return userService.getCreators(search);
+    }
+
+    @DeleteMapping("/app/user/{id}")
+    public void deleteUser(@PathVariable UUID id) {
+	userService.deleteUser(id);
     }
 }

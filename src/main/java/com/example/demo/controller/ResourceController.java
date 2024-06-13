@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
 import com.example.demo.domain.StringResponse;
+import com.example.demo.service.FileCleanerScheduler;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -27,6 +29,7 @@ public class ResourceController {
     public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/uploads";
 
     private final UserService userService;
+    private final FileCleanerScheduler fileCleanerScheduler;
 
     @GetMapping(value = "/image/{filename}", produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] getImage(@PathVariable String filename) throws IOException {
@@ -50,10 +53,17 @@ public class ResourceController {
     }
 
     @PostMapping("/app/upload/video")
-    public StringResponse uploadVideo(@RequestParam("file") MultipartFile file) throws IOException {
-	String fileName = UUID.randomUUID() + "." + file.getOriginalFilename().split("\\.")[1];
+    public StringResponse uploadVideo(@RequestParam("file") MultipartFile file,
+	    @RequestParam(required = false) String name) throws IOException {
+	String fileName;
+	if (StringUtils.isNotBlank(name)) {
+	    fileName = name;
+	} else {
+	    fileName = UUID.randomUUID() + "." + file.getOriginalFilename().split("\\.")[1];
+	}
 	Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, fileName);
 	Files.write(fileNameAndPath, file.getBytes());
+	fileCleanerScheduler.putFile(fileName);
 
 	return new StringResponse(fileName);
     }

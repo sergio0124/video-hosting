@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.domain.TimeCodeRequest;
 import com.example.demo.domain.VideoCreateRequest;
 import com.example.demo.domain.VideoResponse;
+import com.example.demo.domain.VideoUpdateRequest;
 import com.example.demo.domain.entity.TimeCodeEntity;
 import com.example.demo.domain.entity.VideoEntity;
 import com.example.demo.mapper.CommentMapper;
@@ -74,5 +75,14 @@ public class VideoService {
 	Sort sort = Sort.by(Sort.Direction.DESC, "creationTime");
 	return videoRepository.findVideoEntitiesByPlaylist_IsPublicAndNameContainsIgnoreCaseOrPlaylist_IsPublicAndDescriptionContainsIgnoreCase(
 		Boolean.TRUE, search, Boolean.TRUE, search, sort).stream().map(videoMapper::toResponse).toList();
+    }
+
+    public void updateVideo(VideoUpdateRequest request) {
+	VideoEntity video = videoRepository.findById(request.getId()).orElseThrow();
+	video.setName(request.getName());
+	video.setDescription(request.getDescription());
+	video.setVideoUrl(request.getVideoUrl());
+	video.setImageUrl(request.getImageUrl());
+	videoRepository.save(video);
     }
 }
